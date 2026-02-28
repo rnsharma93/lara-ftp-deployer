@@ -26,8 +26,8 @@ It intelligently detects what changed locally and **only deploys the exact modif
 
 ## Requirements
 
-- **PHP 8.0+**
-- **Laravel 10.x / 11.x**
+- **PHP 8.1+**
+- **Laravel 10+**
 - Standard FTP connection (Credentials to your cPanel / Plesk or generic server).
 - **Remote Endpoint**: The server must be capable of parsing `php` to handle extraction and API calls.
 
