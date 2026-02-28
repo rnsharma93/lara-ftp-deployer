@@ -1,0 +1,19 @@
+{
+  "name": "rnsharma93/laravel-deployer",
+  "version": "1.0.0",
+  "description": "Laravel deployer package - final architecture",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Ram\\Deployer\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Ram\\Deployer\\DeployerServiceProvider"
+      ]
+    }
+  }
+}
