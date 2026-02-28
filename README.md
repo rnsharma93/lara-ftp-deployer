@@ -52,26 +52,45 @@ Open `.env` and configure your default target server credentials securely:
 
 ```env
 # URL where your Laravel app is hosted (e.g. https://example.com)
-DEPLOY_REMOTE_BASE_URL=https://your-domain.com
+DEPLOYER_REMOTE_BASE_URL=https://your-domain.com
 
 # Standard FTP configurations pointing to your Laravel Root
-DEPLOY_FTP_HOST=ftp.your-domain.com
-DEPLOY_FTP_USERNAME=your-username
-DEPLOY_FTP_PASSWORD=your-password
-DEPLOY_FTP_PORT=21
-DEPLOY_FTP_PATH=/public_html/
+DEPLOYER_FTP_HOST=ftp.your-domain.com
+DEPLOYER_FTP_USERNAME=your-username
+DEPLOYER_FTP_PASSWORD=your-password
+DEPLOYER_FTP_PORT=21
+DEPLOYER_FTP_PATH=/public_html/
 
 # Secure random token representing the Handshake Secret
-DEPLOY_DEPLOY_TOKEN=my-secure-random-deployment-token-12345
+DEPLOYER_TOKEN=my-secure-random-deployment-token-12345
 
 # Tracking configuration
-DEPLOY_INCREMENTAL=true
-DEPLOY_INCREMENTAL_GIT=true
+DEPLOYER_INCREMENTAL=true
+DEPLOYER_INCREMENTAL_GIT=true
 ```
 
 ### Multi-Environment Support
 
-You can define unlimited stages inside `config/deployer.php` (e.g., `production`, `staging`, `testing`). Just define them in the array and use variables like `DEPLOY_STAGING_FTP_HOST` in your `.env` appropriately.
+You can define unlimited stages inside `config/deployer.php` (e.g., `production`, `staging`, `testing`). Just define them in the array and use variables like `DEPLOYER_STAGING_FTP_HOST` in your `.env` appropriately.
+
+**Example configuring Staging and Production in `.env`:**
+```env
+# Production Environment
+DEPLOYER_PRODUCTION_REMOTE_BASE_URL=https://production.com
+DEPLOYER_PRODUCTION_FTP_HOST=ftp.production.com
+DEPLOYER_PRODUCTION_FTP_USERNAME=prod-username
+DEPLOYER_PRODUCTION_FTP_PASSWORD=prod-password
+DEPLOYER_PRODUCTION_FTP_PATH=/public_html/
+DEPLOYER_PRODUCTION_DEPLOY_TOKEN=super-secret-production-token
+
+# Staging Environment
+DEPLOYER_STAGING_REMOTE_BASE_URL=https://staging.example.com
+DEPLOYER_STAGING_FTP_HOST=ftp.staging.example.com
+DEPLOYER_STAGING_FTP_USERNAME=stage-username
+DEPLOYER_STAGING_FTP_PASSWORD=stage-password
+DEPLOYER_STAGING_FTP_PATH=/staging_html/
+DEPLOYER_STAGING_DEPLOY_TOKEN=my-secure-staging-token
+```
 
 ---
 
