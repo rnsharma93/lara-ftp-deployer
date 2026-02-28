@@ -203,7 +203,7 @@ Enjoy lightning-fast deployments!
 
 **Ram Sharma**
 - GitHub: [@rnsharma93](https://github.com/rnsharma93)
-- Email: rnsharma93@gmail.com
+- Email: rns6393@gmail.com
 
 If you find this package helpful in your daily deployment workflow, please consider starring the repository on GitHub!
 
