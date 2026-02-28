@@ -195,6 +195,22 @@ After a zip is successfully extracted on the server, the config sequentially tri
 ],
 ```
 
+Enjoy lightning-fast deployments!
+
 ---
 
-Enjoy lightning-fast deployments!
+## 👨‍💻 Developed By
+
+**Ram Sharma**
+- GitHub: [@rnsharma93](https://github.com/rnsharma93)
+- Email: rnsharma93@gmail.com
+
+If you find this package helpful in your daily deployment workflow, please consider starring the repository on GitHub!
+
+---
+
+## 📜 License & Open Source
+
+The **Lara FTP Deployer** package is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+You are completely free to use, modify, and distribute this package in both personal and commercial projects. Contributions, issues, and feature requests are always welcome! Feel free to check the [issues page](https://github.com/rnsharma93/lara-ftp-deployer/issues) if you want to contribute.

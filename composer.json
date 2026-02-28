@@ -1,9 +1,16 @@
 {
-  "name": "rnsharma93/laravel-deployer",
+  "name": "rnsharma93/lara-ftp-deployer",
   "version": "1.0.0",
-  "description": "Laravel deployer package - final architecture",
+  "description": "A blazing fast, highly optimized FTP-based deployment package for Laravel applications.",
   "type": "library",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "Ram Sharma",
+      "email": "rnsharma93@gmail.com",
+      "role": "Developer"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Ram\\Deployer\\": "src/"
