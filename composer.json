@@ -1,6 +1,6 @@
 {
   "name": "rnsharma93/lara-ftp-deployer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A blazing fast, highly optimized FTP-based deployment package for Laravel applications.",
   "type": "library",
   "license": "MIT",
