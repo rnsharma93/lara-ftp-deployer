@@ -4,6 +4,8 @@ There are many excellent CI/CD tools available for VPS, cloud, or managed server
 
 **Lara FTP Deployer** comes to the rescue to solve exactly this issue. You can deploy your changes securely via FTP with a single artisan command. Not only does it upload your files, but this single command can also run your configured set of Artisan commands (from `migrate` to `optimize:clear`) directly on the shared hosting server!
 
+Furthermore, you can instantly stream, watch, and securely download your remote application logs directly from your terminal, treating your shared host like it has native SSH access.
+
 Deploying via FTP doesn't have to be agonizingly slow. This package solves the traditional FTP bottleneck by zipping your application, uploading it as a single chunk, and extracting it blazingly fast directly on your live server using native PHP ZipArchive functions.
 
 It intelligently detects what changed locally and **only deploys the exact modified files** using lightning-fast Git Diff analysis, falling back safely to MD5 hash tracking if Git isn't available.
@@ -17,6 +19,7 @@ It intelligently detects what changed locally and **only deploys the exact modif
 - **Automated Directory Setup**: Sets up required Laravel directories (like `storage/framework/sessions`, `bootstrap/cache`) seamlessly on initial deployment without overwriting live user data.
 - **Untracked File Deletion Detection**: Seamlessly detects and deletes files from the remote server if they were uploaded but later locally removed without a Git trace.
 - **Remote Artisan Execution**: Instantly run database migrations, cache clearing, and specific commands right from your terminal without SSH (`php artisan ftp:cmd`).
+- **Remote Log Streaming**: Seamlessly tail and watch remote log files locally in your terminal with fully color-coded output, no SSH required (`php artisan ftp:logs`).
 - **Multi-Environment Support**: Target endless environments via the `--env` flag (e.g. `production`, `staging`, `demo`).
 
 ---
@@ -197,6 +200,36 @@ php artisan ftp:cmd --cmd="cache:clear" --env=staging
 ```
 
 > **Note:** The server-side runner gracefully captures terminal streams, so output is perfectly mapped over HTTP back to your local IDE in real-time.
+
+---
+
+## Remote Log Streaming
+
+When bugs happen on a shared host, SSHing in to check `laravel.log` isn't an option. The `ftp:logs` command utilizes lightning-fast pooling to stream remote files directly into your local terminal in beautifully color-coded text.
+
+**1. Tail the Default Log**
+Instantly view the last 100 lines of `storage/logs/laravel.log`:
+```bash
+php artisan ftp:logs
+```
+
+**2. Watch the Server Log Live**
+Watch the log file continuously. Every 3 seconds it securely queries the FTP server for *new* bytes (it does not download the whole file repeatedly!) and streams it directly to your CLI:
+```bash
+php artisan ftp:logs --watch
+```
+
+**3. Tail Custom Paths**
+Specify exactly how many lines you want from other log files relative to `storage/logs/`:
+```bash
+php artisan ftp:logs --path="worker.log" --tail=50
+```
+
+**4. Safely Download Huge Logs**
+If a file is extremely large, streaming can be hazardous. The `--download` flag instantly checks the filesize metadata on the server. If it is over **5MB**, it warns you first. It then downloads it securely to your local machine (`storage/logs/laravel-server.log`):
+```bash
+php artisan ftp:logs --download
+```
 
 ---
 

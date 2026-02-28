@@ -19,6 +19,7 @@ class DeployerServiceProvider extends ServiceProvider
             $this->commands([
                 \Ram\Deployer\Console\LaraDeployCommand::class,
                 \Ram\Deployer\Console\LaraRemoteCmdCommand::class,
+                \Ram\Deployer\Console\LaraLogsCommand::class,
             ]);
         }
     }

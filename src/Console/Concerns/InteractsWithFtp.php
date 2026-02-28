@@ -204,4 +204,112 @@ trait InteractsWithFtp
         
         return $success;
     }
+
+    protected $persistentCurlHandle = null;
+
+    /**
+     * Get the file size of a remote file via FTP using a persistent connection
+     */
+    protected function getFtpFileSize($env, $remotePath)
+    {
+        $ftpConfig = $this->validateFtpConfig($env);
+        if (!$ftpConfig) return false;
+
+        $url = "ftp://{$ftpConfig['host']}/" . ltrim($ftpConfig['path'], '/') . '/' . ltrim($remotePath, '/');
+        
+        if (!$this->persistentCurlHandle) {
+            $this->persistentCurlHandle = curl_init();
+        }
+        
+        curl_setopt_array($this->persistentCurlHandle, [
+            CURLOPT_URL => $url,
+            CURLOPT_USERPWD => "{$ftpConfig['username']}:{$ftpConfig['password']}",
+            CURLOPT_NOBODY => true,
+            CURLOPT_HEADER => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FILETIME => true,
+            CURLOPT_FTP_USE_EPSV => false, // Sometimes speeds up persistent connections
+            CURLOPT_FORBID_REUSE => false, // Ensure connection pooling is kept alive
+            CURLOPT_FRESH_CONNECT => false,
+        ]);
+        
+        curl_exec($this->persistentCurlHandle);
+        $size = curl_getinfo($this->persistentCurlHandle, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+        
+        return $size > 0 ? (int)$size : 0;
+    }
+
+    /**
+     * Download a file from FTP to a local path
+     */
+    protected function downloadFromFtp($env, $remotePath, $localPath)
+    {
+        $ftpConfig = $this->validateFtpConfig($env);
+        if (!$ftpConfig) return false;
+
+        $url = "ftp://{$ftpConfig['host']}/" . ltrim($ftpConfig['path'], '/') . '/' . ltrim($remotePath, '/');
+        
+        $fp = fopen($localPath, 'w');
+        $ch = curl_init($url);
+        
+        curl_setopt_array($ch, [
+            CURLOPT_USERPWD => "{$ftpConfig['username']}:{$ftpConfig['password']}",
+            CURLOPT_FILE => $fp,
+        ]);
+        
+        $success = curl_exec($ch);
+        curl_close($ch);
+        fclose($fp);
+        
+        return $success !== false;
+    }
+
+    /**
+     * Read file content via FTP using a persistent connection (supports resuming from offset)
+     */
+    protected function readFtpFile($env, $remotePath, $offset = 0)
+    {
+        $ftpConfig = $this->validateFtpConfig($env);
+        if (!$ftpConfig) return false;
+
+        $url = "ftp://{$ftpConfig['host']}/" . ltrim($ftpConfig['path'], '/') . '/' . ltrim($remotePath, '/');
+        
+        if (!$this->persistentCurlHandle) {
+            $this->persistentCurlHandle = curl_init();
+        }
+        
+        $options = [
+            CURLOPT_URL => $url,
+            CURLOPT_USERPWD => "{$ftpConfig['username']}:{$ftpConfig['password']}",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_NOBODY => false,       // Override NOBODY from getFtpFileSize
+            CURLOPT_HEADER => false,       // Override HEADER from getFtpFileSize
+            CURLOPT_FORBID_REUSE => false, // Keep alive
+            CURLOPT_FRESH_CONNECT => false,
+        ];
+        
+        if ($offset > 0) {
+            $options[CURLOPT_RESUME_FROM] = $offset;
+        } else {
+            $options[CURLOPT_RESUME_FROM] = 0; // Reset offset constraint just in case
+        }
+
+        curl_setopt_array($this->persistentCurlHandle, $options);
+        
+        $content = curl_exec($this->persistentCurlHandle);
+        $success = $content !== false;
+        
+        return $success ? $content : false;
+    }
+
+    /**
+     * Close the persistent FTP cURL connection gracefully
+     */
+    protected function closePersistentFtp()
+    {
+        if ($this->persistentCurlHandle) {
+            curl_close($this->persistentCurlHandle);
+            $this->persistentCurlHandle = null;
+        }
+    }
 }
